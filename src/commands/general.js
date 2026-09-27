@@ -57,7 +57,12 @@ const commands = [
   {
     name: 'menu', description: 'Show the full command menu', category: 'general',
     usage: '.menu',
-    execute(args, ctx) { return buildMenu(ctx.commands || []); },
+    execute(args, ctx) {
+      const text = buildMenu(ctx.commands || []);
+      const base = (process.env.APP_URL || '').replace(/\/+$/, '');
+      if (base) return { text, image: `${base}/menu.jpg` };
+      return text;
+    },
   },
   {
     name: 'list', description: 'Compact list of all commands', category: 'general',
