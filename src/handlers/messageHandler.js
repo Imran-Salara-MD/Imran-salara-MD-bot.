@@ -36,8 +36,11 @@ function suggestions(name) {
 }
 
 // Rough language detection for graceful fallback replies.
+// Urdu uses Arabic script plus extra letters (ٹ ڈ ڑ ں ہ ھ ے etc.);
+// plain Arabic script without those is treated as Arabic.
 function detectLang(text) {
-  if (/[\u0600-\u06FF]/.test(text)) return 'ur';
+  if (/[ٹڈڑںہھےپچژگک]/.test(text)) return 'ur';
+  if (/[\u0600-\u06FF]/.test(text)) return 'ar';
   const roman = ['hai', 'nahi', 'nahin', 'kya', 'kaise', 'kyun', 'tum', 'aap', 'mein', 'aur', 'bohat', 'bahut', 'acha', 'shukriya', 'mujhe', 'liye', 'saath'];
   const words = text.toLowerCase().split(/\W+/);
   if (words.filter((w) => roman.includes(w)).length >= 2) return 'roman';
@@ -50,6 +53,9 @@ function aiNotConfiguredNote(lang) {
   }
   if (lang === 'roman') {
     return `🤖 *${BOT_NAME}*\n\nSorry — AI auto-reply abhi configure nahi hai, is liye aap ke message ka jawab nahi de saka.\n\n💡 Commands ke liye .menu likhein.\n🔑 Owner se AI_API_KEY set karne ko kahen.`;
+  }
+  if (lang === 'ar') {
+    return `🤖 *${BOT_NAME}*\n\nعذراً — الرد التلقائي غير مُعدّ بعد، لذا لم أستطع الرد على رسالتك.\n\n💡 اكتب .menu لرؤية الأوامر.\n🔑 اطلب من المالك تعيين AI_API_KEY.`;
   }
   return `🤖 *${BOT_NAME}*\n\nSorry — AI auto-reply isn’t configured yet, so I couldn’t answer your message.\n\n💡 Type .menu to see my 150 commands.\n🔑 Ask the owner to set AI_API_KEY.`;
 }
