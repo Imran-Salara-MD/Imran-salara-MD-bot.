@@ -5,11 +5,15 @@
 
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const { sendText, sendImage, markRead } = require('./services/whatsapp');
 const { handleIncomingText, BOT_NAME } = require('./handlers/messageHandler');
 
 const app = express();
 app.use(express.json());
+
+// Serve public/menu.jpg (the bot's menu image) so WhatsApp can fetch it.
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || '';
 const PORT = process.env.PORT || 3000;
