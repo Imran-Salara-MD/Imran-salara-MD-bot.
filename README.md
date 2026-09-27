@@ -13,7 +13,9 @@ that answers in the *same language/script* you write in
 ## ✨ Features
 
 - 🤖 **150 dot-commands** — general, fun, tools, downloaders, movies, Islamic, AI
-- 🧠 **AI auto-reply** — any plain message gets an intelligent reply
+- 🖼️ **Custom menu image** — `.menu` aap ki apni photo + naam wali image ke saath aata hai (`public/menu.jpg`)
+- 🧠 **AI auto-reply in 4 languages** — Urdu, Roman Urdu, English **aur Arabic**;
+  jis language mein message aaye, usi mein jawab
   (OpenAI-compatible endpoint; graceful fallback when not configured)
 - 🕌 Islamic tools — Quran verses, hadith, prayer times, duas, 99 names, tasbih counter, zakat calculator
 - 🎬 Movie info via OMDB (free key) + legal watchlists
@@ -59,6 +61,7 @@ that answers in the *same language/script* you write in
 | `PHONE_NUMBER_ID` | ✅ | Phone Number ID from the WhatsApp API Setup page |
 | `PORT` | ✅ | Server port (Heroku sets this automatically; default `3000`) |
 | `OWNER_NAME` | ⬜ | Shown in `.owner` / `.info` (default: `Imran Salara`) |
+| `APP_URL` | ⬜ | Public base URL of the app (e.g. `https://your-app.herokuapp.com`); used for the `.menu` image — leave blank for text-only menu |
 | `AI_API_URL` | ⬜ | OpenAI-compatible base URL (e.g. `https://api.openai.com/v1`) |
 | `AI_API_KEY` | ⬜ | API key for AI auto-reply (leave empty to disable AI) |
 | `AI_MODEL` | ⬜ | Model name (default: `gpt-4o-mini`) |
@@ -116,6 +119,7 @@ heroku config:set AI_API_KEY=your-ai-key
 heroku config:set AI_MODEL=gpt-4o-mini
 heroku config:set OMDB_API_KEY=your-omdb-key
 heroku config:set WEATHER_API_KEY=your-weather-key
+heroku config:set APP_URL=https://imran-salara-md-bot.herokuapp.com
 
 git push heroku main
 heroku logs --tail
@@ -126,6 +130,47 @@ Then set your Meta webhook **Callback URL** to:
 ```
 https://imran-salara-md-bot.herokuapp.com/webhook
 ```
+
+---
+
+## 📱 Dusre Users Ke Liye — Roman Urdu Guide (Apne Number Par Lagana)
+
+> **Note:** Ye bot official WhatsApp Cloud API par chalta hai, is liye har
+> user ko apna **khud ka Meta Developer setup** karna hoga. Koi "link do,
+> number connect karo" wala shortcut nahi hai — unofficial tareeqe se number
+> **ban** ho sakta hai. Neeche wala tareeqa 100% safe hai.
+
+**Step 1 — Meta Developer account**
+1. [developers.facebook.com](https://developers.facebook.com) par jayein, login karein.
+2. **Create App** → **Other** → **Business** → app ka naam likhein.
+3. Dashboard mein **WhatsApp** product **Add** karein.
+
+**Step 2 — Test number ya apna number**
+- **API Setup** page par Meta ka free test number milta hai (foran shuru karne ke liye), ya apna WhatsApp Business number add karein.
+- Wahan se **Temporary Access Token** copy karein aur **Phone Number ID** note karein.
+
+**Step 3 — Code Heroku par lagayein**
+1. Is project ko apne GitHub par fork/clone karein.
+2. Heroku mein nayi app banayein.
+3. **Settings → Config Vars** mein ye values dalein:
+   - `VERIFY_TOKEN` — khud koi secret likhein (yaad rakhein)
+   - `WHATSAPP_TOKEN` — Step 2 wala token
+   - `PHONE_NUMBER_ID` — Step 2 wali ID
+   - `OWNER_NAME` — apna naam
+   - `APP_URL` — `https://aapki-app-ka-naam.herokuapp.com`
+   - `AI_API_URL`, `AI_API_KEY`, `AI_MODEL` — AI auto-reply chahiye to (optional)
+4. **Deploy** dabayein, app ONLINE ho jayegi.
+
+**Step 4 — Webhook lagayein**
+1. Meta App Dashboard → **WhatsApp → Configuration**.
+2. **Callback URL** mein likhein: `https://aapki-app-ka-naam.herokuapp.com/webhook`
+3. **Verify Token** mein wohi `VERIFY_TOKEN` jo Step 3 mein lagaya tha.
+4. **Verify and save** dabayein → phir **messages** field ko **Subscribe** karein.
+
+**Step 5 — Test**
+Apne WhatsApp se bot wale number par `.menu` bhejein — aap ki photo wali
+menu image + 150 commands ki list aa jayegi. Koi aam message bhejein —
+bot usi language (Urdu / Roman Urdu / English / Arabic) mein jawab dega.
 
 ---
 
